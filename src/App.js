@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import "./bootstrap.css";
+
+import AddBoxForm from "./components/AddBoxForm"
+import Box from "./components/Box"
 
 function App() {
+  const [boxes, setBoxes] = useState([])
+
+  // DATA PERSISTENCE TO LOCAL STORAGE >>>>>>
+  useEffect( ()=>{
+    const data = localStorage.getItem("boxes");
+    if (data){
+      setBoxes(JSON.parse(data))
+    }
+  }, []);
+
+  useEffect( ()=>{
+    localStorage.setItem("boxes", JSON.stringify(boxes))
+  });
+  // DATA PERSISTENCE TO LOCAL STORAGE >>>>>>
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App container">
+      <AddBoxForm boxes={ boxes } setBoxes={ setBoxes }/>
+      {boxes.map( (box, i)=>(
+        <Box key={ i } box={ box }/>
+      ))}
     </div>
   );
 }
